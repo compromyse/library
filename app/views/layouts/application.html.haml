@@ -7,13 +7,27 @@
     %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
     %meta{:content => "Library", :name => "application-name"}/
     %meta{:content => "yes", :name => "mobile-web-app-capable"}/
+    %meta{:content => "#111827", :name => "theme-color"}/
     = csrf_meta_tags
     = csp_meta_tag
     = yield :head
     %link{:href => "/icon.png", :rel => "icon", :type => "image/png"}/
     %link{:href => "/icon.svg", :rel => "icon", :type => "image/svg+xml"}/
     %link{:href => "/icon.png", :rel => "apple-touch-icon"}/
+    = stylesheet_link_tag "tailwind", "data-turbo-track": "reload"
     = stylesheet_link_tag :app, "data-turbo-track": "reload"
     = javascript_importmap_tags
-  %body
-    = yield
+  %body.bg-white.min-h-screen
+    %nav.border-b-2.border-gray-900.px-6.py-4.flex.items-center.justify-between
+      .flex.items-center
+        = link_to root_path, class: "px-3 text-gray-900 hover:text-gray-600 transition-colors", aria: { label: "Home" } do
+          %svg{xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "22", height: "22"}
+            %path{d: "M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"}
+        .w-px.h-6.bg-gray-400.mx-1
+        %span.px-3.text-lg.font-semibold.text-gray-900 Library
+    - if flash[:notice]
+      .px-6.py-3.bg-green-100.border-b.border-green-300.text-green-900.text-lg= flash[:notice]
+    - if flash[:alert]
+      .px-6.py-3.bg-red-100.border-b.border-red-300.text-red-900.text-lg= flash[:alert]
+    .px-6.py-8
+      = yield
