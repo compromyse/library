@@ -1,0 +1,5 @@
+- content_for :title, "Pending approval"
+.max-w-md.mx-auto.mt-16.text-center
+  %h1.text-3xl.font-bold.text-gray-900.mb-6 Almost there
+  %p.text-xl.text-gray-600.mb-10 Please wait for an admin to approve your account.
+  = button_to "Log out", logout_path, method: :delete, class: "px-6 py-3 text-lg font-medium text-gray-900 underline bg-transparent border-0 cursor-pointer"

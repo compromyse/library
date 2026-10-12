@@ -25,6 +25,18 @@
             %path{d: "M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"}
         .w-px.h-6.bg-gray-400.mx-1
         %span.px-3.text-lg.font-semibold.text-gray-900 Library
+      - if current_user
+        .hidden.lg:flex.items-center.gap-8
+          %span.text-lg.text-gray-700= current_user.name
+          = button_to "Log out", logout_path, method: :delete, class: "text-lg font-medium text-gray-900 underline bg-transparent border-0 cursor-pointer"
+        .lg:hidden.relative{data: { controller: "nav-menu", action: "click@window->nav-menu#close" }}
+          %button{type: "button", "aria-haspopup": "true", "aria-expanded": "false",
+              data: { "nav-menu-target": "button", action: "click->nav-menu#toggle" },
+              class: "px-4 py-2 text-lg font-medium text-gray-900 border-2 border-gray-900 bg-white text-center cursor-pointer"}
+            = current_user.name
+            %span.text-gray-400.ml-1 ▾
+          .absolute.right-0.z-10.mt-1.min-w-48.bg-white.border-2.border-gray-900{hidden: true, data: { "nav-menu-target": "panel" }}
+            = button_to "Log out", logout_path, method: :delete, class: "block w-full text-left px-4 py-3 text-lg font-medium text-gray-900 hover:bg-gray-100 bg-transparent border-0 cursor-pointer"
     - if flash[:notice]
       .px-6.py-3.bg-green-100.border-b.border-green-300.text-green-900.text-lg= flash[:notice]
     - if flash[:alert]

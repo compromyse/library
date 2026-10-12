@@ -1,0 +1,29 @@
+- content_for :title, "Users"
+.flex.items-center.justify-between.mb-8
+  %h1.text-3xl.font-bold.text-gray-900 Users
+  = link_to "Add User", new_admin_user_path, class: "px-6 py-3 text-lg font-bold text-white bg-gray-900 hover:bg-gray-700 transition-colors"
+
+- if @pending_users.any?
+  %section.mb-10
+    %h2.text-sm.font-semibold.text-gray-500.uppercase.tracking-widest.mb-3 Pending Approval
+    .space-y-2
+      - @pending_users.each do |user|
+        .flex.flex-col.sm:flex-row.sm:items-center.sm:justify-between.gap-3.px-6.py-5.border-2.border-gray-900
+          .space-y-1
+            %p.text-2xl.font-bold.text-gray-900= user.name
+            %p.text-lg.text-gray-500= user.email
+          = button_to "Approve", approve_admin_user_path(user), method: :patch,
+              class: "w-full sm:w-auto text-center px-6 py-3 text-lg font-bold text-white bg-gray-900 hover:bg-gray-700 cursor-pointer transition-colors",
+              form: { class: "w-full sm:w-auto sm:shrink-0" }
+
+%section
+  %h2.text-sm.font-semibold.text-gray-500.uppercase.tracking-widest.mb-3 Approved
+  - if @approved_users.any?
+    .space-y-2
+      - @approved_users.each do |user|
+        .flex.flex-col.sm:flex-row.sm:items-center.sm:justify-between.gap-3.px-6.py-5.border-2.border-gray-900
+          .space-y-1
+            %p.text-2xl.font-bold.text-gray-900= user.name
+            %p.text-lg.text-gray-500= [ user.email, (user.admin? ? "Admin" : nil) ].compact.join(" · ")
+  - else
+    %p.text-xl.text-gray-500 No approved users yet.

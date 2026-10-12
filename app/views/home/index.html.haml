@@ -1,2 +1,10 @@
 - content_for :title, "Home"
-%h1.text-3xl.font-bold.text-gray-900 Library
+%h1.text-3xl.font-bold.text-gray-900.mb-8= "Welcome, #{current_user.name}"
+
+- if current_user.admin?
+  .space-y-10
+    %section
+      %h2.text-sm.font-semibold.text-gray-500.uppercase.tracking-widest.mb-3 Administration
+      = link_to admin_users_path, class: "flex items-center justify-between px-6 py-5 border-2 border-gray-900 hover:bg-gray-100 transition-colors" do
+        %span.text-2xl.font-bold.text-gray-900 Manage Users
+        %span.text-gray-500 →
