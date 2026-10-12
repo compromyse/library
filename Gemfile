@@ -56,4 +56,9 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  gem "foreman"
 end
+
+gem "haml-rails", "~> 3.0"
+
+gem "html2haml", "~> 2.3"
