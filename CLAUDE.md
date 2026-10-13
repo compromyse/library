@@ -14,7 +14,7 @@ Target audience: caseworkers logging interactions quickly, often on a phone, som
 
 ### Future considerations
 
-- Models, auth, and the interaction/service-plan views described above are not built yet — only the UI scaffolding (layout, styling, Haml/Tailwind setup) exists so far.
+- Auth, the `Interaction`/`Issue` and `ServicePlan`/`ServicePlanInteraction` models, and the new-interaction form are built (see `docs/architecture/interactions.md`). Service plan views, looking an interaction up against a service plan, and point-person defaulting are not built yet.
 
 ## Quick reference
 

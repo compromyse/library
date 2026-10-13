@@ -1,0 +1,25 @@
+.space-y-4.border-2.border-gray-400.p-4{data: {"issues-form-target": "row", controller: "primary-need"}}
+  .space-y-2
+    = f.label :primary_need, "Primary need", class: "block text-xl font-medium text-gray-900"
+    = f.select :primary_need, Issue.primary_needs.keys.map { |k| [ k.humanize, k ] }, {},
+        class: "px-3 py-2 text-lg border-2 border-gray-400 bg-white",
+        data: { "primary-need-target": "select", action: "change->primary-need#toggle" }
+    - f.object.errors[:primary_need].each do |msg|
+      %p.text-lg.text-red-700= msg
+
+  .space-y-2{class: ("hidden" unless f.object.other?), data: {"primary-need-target": "otherDetail"}}
+    = f.label :primary_need_other_detail, "If other, please specify", class: "block text-xl font-medium text-gray-900"
+    = f.text_field :primary_need_other_detail,
+        class: "w-full px-4 py-3 text-xl border-2 border-gray-400 focus:border-gray-900 focus:outline-none"
+    - f.object.errors[:primary_need_other_detail].each do |msg|
+      %p.text-lg.text-red-700= msg
+
+  .space-y-2
+    = f.label :interaction_description, "Description", class: "block text-xl font-medium text-gray-900"
+    = f.text_area :interaction_description, rows: 3,
+        class: "w-full px-4 py-3 text-xl border-2 border-gray-400 focus:border-gray-900 focus:outline-none"
+    - f.object.errors[:interaction_description].each do |msg|
+      %p.text-lg.text-red-700= msg
+
+  %button{type: "button", data: { action: "click->issues-form#remove" },
+      class: "px-4 py-2 text-lg font-medium text-red-700 underline bg-transparent border-0 cursor-pointer"} Remove issue

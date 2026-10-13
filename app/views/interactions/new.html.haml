@@ -1,0 +1,42 @@
+- content_for :title, "Log Interaction"
+%h1.text-3xl.font-bold.text-gray-900.mb-8.text-center Log Interaction
+
+= form_with model: @interaction, class: "space-y-8 max-w-lg mx-auto" do |f|
+  - if @interaction.errors.any?
+    .space-y-1
+      - @interaction.errors.full_messages.each do |msg|
+        %p.text-lg.text-red-700= msg
+
+  %fieldset.space-y-3
+    %legend.block.w-full.text-center.text-sm.font-semibold.text-gray-500.uppercase.tracking-widest.mb-3.py-3 Observed Characteristics
+    .flex.flex-col.sm:flex-row.gap-6.justify-center.items-center
+      .space-y-2.text-center
+        = f.label :age, "Approximate age", class: "block text-xl font-medium text-gray-900"
+        = f.select :age, Interaction.ages.keys.map { |k| [ k.humanize, k ] }, { include_blank: "Select one" },
+            class: "px-3 py-2 text-lg border-2 border-gray-400 bg-white"
+      .w-full.h-px.sm:w-px.sm:h-auto.sm:self-stretch.bg-gray-200.mx-8
+      .space-y-2.text-center
+        = f.label :gender, "Gender", class: "block text-xl font-medium text-gray-900"
+        = f.select :gender, Interaction.genders.keys.map { |k| [ k.humanize, k ] }, { include_blank: "Select one" },
+            class: "px-3 py-2 text-lg border-2 border-gray-400 bg-white"
+
+  %div{data: { controller: "issues-form", "issues-form-index-value": 1 }}
+    %legend.block.w-full.text-center.text-sm.font-semibold.text-gray-500.uppercase.tracking-widest.mb-3.py-3 Issues
+    .space-y-4{data: { "issues-form-target": "list" }}
+      = f.fields_for :issues do |ifc|
+        = render "issue_fields", f: ifc
+    %button{type: "button", data: { action: "click->issues-form#add" },
+        class: "mt-4 px-4 py-2 text-lg font-medium text-gray-900 border-2 border-gray-900 hover:bg-gray-100 cursor-pointer transition-colors"} + Add another issue
+    %template#issue-row-template
+      = f.fields_for :issues, Issue.new, child_index: "NEW_INDEX" do |ifc|
+        = render "issue_fields", f: ifc
+
+  %legend.block.w-full.text-center.text-sm.font-semibold.text-gray-500.uppercase.tracking-widest.mb-3.py-3 Interaction Estimates
+  .space-y-2
+    = f.label :estimated_time, "Estimated interaction time", class: "block text-xl font-medium text-gray-900"
+    = f.select :estimated_time, Interaction.estimated_times.keys.map { |k| [ k.humanize, k ] }, { include_blank: "Select one" },
+        class: "px-3 py-2 text-lg border-2 border-gray-400 bg-white"
+
+  .flex.gap-4
+    = f.submit "Log Interaction", class: "px-6 py-3 text-lg font-bold text-white bg-gray-900 hover:bg-gray-700 cursor-pointer transition-colors"
+    = link_to "Cancel", root_path, class: "px-6 py-3 text-lg font-medium text-gray-900 underline"

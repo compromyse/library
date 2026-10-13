@@ -1,0 +1,21 @@
+# password for all users is "password"
+caseworker:
+  name: Case Worker
+  email: caseworker@example.com
+  password_digest: <%= BCrypt::Password.create("password", cost: 4) %>
+  admin: false
+  approved: true
+
+admin:
+  name: Admin User
+  email: admin@example.com
+  password_digest: <%= BCrypt::Password.create("password", cost: 4) %>
+  admin: true
+  approved: true
+
+pending:
+  name: Pending User
+  email: pending@example.com
+  password_digest: <%= BCrypt::Password.create("password", cost: 4) %>
+  admin: false
+  approved: false

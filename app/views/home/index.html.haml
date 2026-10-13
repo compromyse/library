@@ -1,6 +1,8 @@
 - content_for :title, "Home"
 %h1.text-3xl.font-bold.text-gray-900.mb-8= "Welcome, #{current_user.name}"
 
+= link_to "Log Interaction", new_interaction_path, class: "block w-full text-center px-6 py-4 text-xl font-bold text-white bg-gray-900 hover:bg-gray-700 transition-colors mb-10"
+
 - if current_user.admin?
   .space-y-10
     %section
