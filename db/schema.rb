@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_12_200109) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_13_182050) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -32,6 +32,31 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_12_200109) do
     t.index ["interaction_id"], name: "index_issues_on_interaction_id"
   end
 
+  create_table "service_plan_interactions", force: :cascade do |t|
+    t.bigint "service_plan_id", null: false
+    t.date "date", null: false
+    t.integer "primary_need", null: false
+    t.text "primary_need_other_detail"
+    t.text "action_referrals", null: false
+    t.bigint "point_person_id"
+    t.string "point_person_name"
+    t.integer "status", default: 0, null: false
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["point_person_id"], name: "index_service_plan_interactions_on_point_person_id"
+    t.index ["service_plan_id"], name: "index_service_plan_interactions_on_service_plan_id"
+  end
+
+  create_table "service_plans", force: :cascade do |t|
+    t.string "client_name", null: false
+    t.string "contact"
+    t.date "date_of_contact", null: false
+    t.text "background"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name", null: false
     t.string "email", null: false
@@ -44,4 +69,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_12_200109) do
   end
 
   add_foreign_key "issues", "interactions"
+  add_foreign_key "service_plan_interactions", "service_plans"
+  add_foreign_key "service_plan_interactions", "users", column: "point_person_id"
 end
