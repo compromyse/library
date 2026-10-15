@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_13_182050) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_15_121534) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -20,6 +20,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_13_182050) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "estimated_time", null: false
+    t.index ["created_at"], name: "index_interactions_on_created_at"
   end
 
   create_table "issues", force: :cascade do |t|

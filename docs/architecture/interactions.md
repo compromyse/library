@@ -51,7 +51,20 @@ second request — all of today's interactions are already in the response.
 Because "today" is evaluated against `Time.zone`, `config.application.rb` sets
 `config.time_zone = "Eastern Time (US & Canada)"` — without it Rails defaults to UTC, and an
 interaction logged in the evening would silently fall into the next UTC calendar day and vanish
-from the dashboard.
+from the dashboard. `interactions.created_at` has a database index to back that `WHERE` + `ORDER
+BY` query.
+
+### Expanding a row instead of a show page
+
+Each summary row has a paired detail `<tr>` (`colspan`-ed, initially `hidden`) containing an empty
+`<turbo-frame>` with the interaction's `primary_need`/detail/description for every issue — a
+lighter alternative to a dedicated show page. The frame's `src` is intentionally left unset in the
+server-rendered HTML (only stashed in `data-src`) so a day's worth of issues is never eager-loaded
+into the dashboard response. `app/javascript/controllers/row_details_controller.js` toggles the
+detail row's visibility on click and, the first time a row opens, copies `data-src` onto the
+frame's real `src` attribute, which makes Turbo fetch `InteractionsController#show` (rendered with
+`layout: false`, `includes(:issues)` to avoid an N+1 there) and fill the frame in place. Later
+clicks just toggle visibility — the frame keeps its already-fetched content.
 
 ## Not yet built
 

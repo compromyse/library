@@ -1,4 +1,10 @@
 class InteractionsController < ApplicationController
+  layout false, only: :show
+
+  def show
+    @interaction = Interaction.includes(:issues).find(params[:id])
+  end
+
   def new
     @interaction = Interaction.new
     @interaction.issues.build

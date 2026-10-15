@@ -1,0 +1,8 @@
+= turbo_frame_tag dom_id(@interaction, :details) do
+  .space-y-4
+    - @interaction.issues.each do |issue|
+      .space-y-1
+        %p.text-lg.font-semibold.text-gray-900= issue.primary_need.humanize
+        - if issue.other?
+          %p.text-lg.text-gray-700= issue.primary_need_other_detail
+        %p.text-lg.text-gray-700= issue.interaction_description
