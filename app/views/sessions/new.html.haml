@@ -14,3 +14,6 @@
   %p.my-6.text-center.text-lg.text-gray-500 or
   = button_to "Sign in with Google", "/auth/google_oauth2", data: { turbo: false },
       class: "w-full py-4 text-xl font-bold text-gray-900 border-2 border-gray-900 hover:bg-gray-100 cursor-pointer transition-colors"
+  %p.mt-6.text-center.text-lg.text-gray-500
+    Don't have an account?
+    = link_to "Sign up", signup_path, class: "text-gray-900 underline"

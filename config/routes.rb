@@ -13,14 +13,19 @@ Rails.application.routes.draw do
   post   "/login",  to: "sessions#create"
   delete "/logout", to: "sessions#destroy", as: :logout
 
+  get  "/signup", to: "registrations#new",    as: :signup
+  post "/signup", to: "registrations#create"
+
   get "/auth/:provider/callback", to: "sessions#omniauth"
   get "/auth/failure",            to: "sessions#omniauth_failure"
 
   resources :interactions, only: [ :new, :create, :show, :edit, :update ]
 
   namespace :admin do
-    resources :users, only: [ :index, :new, :create ] do
-      patch :approve, on: :member
+    resources :users, only: [ :index, :new, :create, :edit, :update ] do
+      patch :approve,   on: :member
+      patch :deny,      on: :member
+      patch :unapprove, on: :member
     end
   end
 

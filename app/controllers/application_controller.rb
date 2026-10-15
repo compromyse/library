@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include Pagy::Backend
+
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 
@@ -23,7 +25,7 @@ class ApplicationController < ActionController::Base
   def require_approval
     return unless current_user
     return if current_user.approved?
-    render "shared/pending_approval"
+    render current_user.denied? ? "shared/denied" : "shared/pending_approval"
   end
 
   def require_admin

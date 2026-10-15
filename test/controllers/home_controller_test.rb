@@ -13,10 +13,16 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to login_path
   end
 
-  test "unapproved user sees the pending-approval page" do
+  test "pending user sees the pending-approval page" do
     post login_path, params: { email: users(:pending).email, password: "password" }
     get root_path
     assert_match "wait for an admin", response.body
+  end
+
+  test "denied user sees the denied page instead" do
+    post login_path, params: { email: users(:denied).email, password: "password" }
+    get root_path
+    assert_match "Account denied", response.body
   end
 
   test "shows a message when no interactions were logged today" do

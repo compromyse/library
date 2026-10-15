@@ -1,0 +1,5 @@
+- content_for :title, "Account denied"
+.max-w-md.mx-auto.mt-16.text-center
+  %h1.text-3xl.font-bold.text-gray-900.mb-6 Account denied
+  %p.text-xl.text-gray-600.mb-10 An admin has denied your account. Contact an admin if you think this is a mistake.
+  = button_to "Log out", logout_path, method: :delete, class: "px-6 py-3 text-lg font-medium text-gray-900 underline bg-transparent border-0 cursor-pointer"

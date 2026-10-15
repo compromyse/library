@@ -14,7 +14,7 @@ Target audience: caseworkers logging interactions quickly, often on a phone, som
 
 ### Future considerations
 
-- Auth, the `Interaction`/`Issue` and `ServicePlan`/`ServicePlanInteraction` models, and the new-interaction form are built (see `docs/architecture/interactions.md`). Service plan views, looking an interaction up against a service plan, and point-person defaulting are not built yet.
+- Auth (see `docs/architecture/auth.md`), the `Interaction`/`Issue` and `ServicePlan`/`ServicePlanInteraction` models, and the new-interaction form are built (see `docs/architecture/interactions.md`). Service plan views, looking an interaction up against a service plan, and point-person defaulting are not built yet.
 
 ## Quick reference
 

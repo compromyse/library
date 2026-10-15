@@ -4,18 +4,25 @@ caseworker:
   email: caseworker@example.com
   password_digest: <%= BCrypt::Password.create("password", cost: 4) %>
   admin: false
-  approved: true
+  status: approved
 
 admin:
   name: Admin User
   email: admin@example.com
   password_digest: <%= BCrypt::Password.create("password", cost: 4) %>
   admin: true
-  approved: true
+  status: approved
 
 pending:
   name: Pending User
   email: pending@example.com
   password_digest: <%= BCrypt::Password.create("password", cost: 4) %>
   admin: false
-  approved: false
+  status: pending
+
+denied:
+  name: Denied User
+  email: denied@example.com
+  password_digest: <%= BCrypt::Password.create("password", cost: 4) %>
+  admin: false
+  status: denied
