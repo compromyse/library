@@ -75,6 +75,16 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
+  # Enable DNS rebinding protection and other `Host` header attacks.
+  # Allow the base host (from APP_HOST) and all its subdomains (e.g. delivery.<APP_HOST>).
+  # Stays permissive (unset) if APP_HOST isn't configured, rather than blocking every request.
+  # Always allow localhost too — unlike development, production doesn't auto-permit it once
+  # config.hosts is set, and running the production build locally (e.g. via Docker) is routine.
+  if ENV["APP_HOST"].present?
+    config.hosts << ".#{ENV["APP_HOST"]}"
+    config.hosts << "localhost"
+  end
+
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
 
