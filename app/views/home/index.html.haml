@@ -1,12 +1,40 @@
 - content_for :title, "Home"
-%h1.text-3xl.font-bold.text-gray-900.mb-8= "Welcome, #{current_user.name}"
+.max-w-4xl.mx-auto.px-4
+  %h1.text-3xl.font-bold.text-gray-900.mb-8= "Welcome, #{current_user.name}"
 
-= link_to "Log Interaction", new_interaction_path, class: "block w-full text-center px-6 py-4 text-xl font-bold text-white bg-gray-900 hover:bg-gray-700 transition-colors mb-10"
+  %section.mb-10{data: { controller: "expandable" }}
+    %h2.text-sm.font-semibold.text-gray-500.uppercase.tracking-widest.mb-3 Today's Interactions
+    - if @todays_interactions.any?
+      .overflow-x-auto
+        %table.w-full.border-collapse
+          %thead
+            %tr.border-b-2.border-gray-900
+              %th.text-left.px-3.py-2.text-lg.font-semibold.text-gray-700 Time
+              %th.text-left.px-3.py-2.text-lg.font-semibold.text-gray-700 Age
+              %th.text-left.px-3.py-2.text-lg.font-semibold.text-gray-700 Gender
+              %th.text-left.px-3.py-2.text-lg.font-semibold.text-gray-700 Primary Need(s)
+              %th.text-left.px-3.py-2.text-lg.font-semibold.text-gray-700 Duration
+          %tbody
+            - @todays_interactions.each_with_index do |interaction, index|
+              %tr.border-b.border-gray-200{class: ("hidden" if index >= 5), data: ({"expandable-target": "extra"} if index >= 5)}
+                %td.px-3.py-2.text-lg.text-gray-900= interaction.created_at.strftime("%-l:%M %p")
+                %td.px-3.py-2.text-lg.text-gray-900= interaction.age.humanize
+                %td.px-3.py-2.text-lg.text-gray-900= interaction.gender.humanize
+                %td.px-3.py-2.text-lg.text-gray-900= interaction.issues.map { |i| i.primary_need.humanize }.join(", ")
+                %td.px-3.py-2.text-lg.text-gray-900= interaction.estimated_time.humanize
+      - if @todays_interactions.size > 5
+        %button{type: "button", data: { "expandable-target": "button", action: "click->expandable#show" },
+            class: "mt-3 px-4 py-2 text-lg font-medium text-gray-900 border-2 border-gray-900 hover:bg-gray-100 cursor-pointer transition-colors"}
+          = "Show all (#{@todays_interactions.size})"
+    - else
+      %p.text-xl.text-gray-500 No interactions logged today.
 
-- if current_user.admin?
-  .space-y-10
-    %section
-      %h2.text-sm.font-semibold.text-gray-500.uppercase.tracking-widest.mb-3 Administration
-      = link_to admin_users_path, class: "flex items-center justify-between px-6 py-5 border-2 border-gray-900 hover:bg-gray-100 transition-colors" do
-        %span.text-2xl.font-bold.text-gray-900 Manage Users
-        %span.text-gray-500 →
+  = link_to "Log Interaction", new_interaction_path, class: "block w-full text-center px-6 py-4 text-xl font-bold text-white bg-gray-900 hover:bg-gray-700 transition-colors mb-10"
+
+  - if current_user.admin?
+    .space-y-10
+      %section
+        %h2.text-sm.font-semibold.text-gray-500.uppercase.tracking-widest.mb-3 Administration
+        = link_to admin_users_path, class: "flex items-center justify-between px-6 py-5 border-2 border-gray-900 hover:bg-gray-100 transition-colors" do
+          %span.text-2xl.font-bold.text-gray-900 Manage Users
+          %span.text-gray-500 →

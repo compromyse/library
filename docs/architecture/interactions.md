@@ -37,7 +37,21 @@ there is no separate label/constant map to keep in sync.
 
 Logging an interaction requires an authenticated, approved user (see `ApplicationController`) but
 not admin rights — any caseworker can log one. The dashboard (`home#index`) surfaces a prominent
-"Log New Interaction" button above the admin-only section.
+"Log Interaction" button.
+
+## Dashboard: today's interactions
+
+`HomeController#index` loads every `Interaction` created today (`Time.current.all_day`, most
+recent first) into `@todays_interactions` and renders it as a table above the "Log Interaction"
+button. Only the first 5 rows are visible; the rest are rendered with a `hidden` class and
+revealed in place by `app/javascript/controllers/expandable_controller.js` when the caseworker
+clicks "Show all (N)" (N is the total count for the day). This is a plain CSS-class toggle, not a
+second request — all of today's interactions are already in the response.
+
+Because "today" is evaluated against `Time.zone`, `config.application.rb` sets
+`config.time_zone = "Eastern Time (US & Canada)"` — without it Rails defaults to UTC, and an
+interaction logged in the evening would silently fall into the next UTC calendar day and vanish
+from the dashboard.
 
 ## Not yet built
 
