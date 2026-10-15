@@ -38,7 +38,7 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert_select "turbo-frame#details_interaction_#{today.id}[data-src]"
   end
 
-  test "shows at most 5 rows without hiding the rest, plus a show-all button with the total count" do
+  test "shows at most 5 rows without hiding the rest, plus a show-all button with the hidden count" do
     7.times { create_interaction }
 
     post login_path, params: { email: users(:caseworker).email, password: "password" }
@@ -49,7 +49,8 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert_select "tr[data-action='click->row-details#toggle']", count: 7
     # 2 summary rows hidden until "show all", plus all 7 detail rows start collapsed
     assert_select "tbody tr.hidden", count: 9
-    assert_select "button[data-expandable-target='button']", text: "Show all (7)"
+    # 7 total - 5 always-visible = 2 hidden
+    assert_select "button[data-expandable-target='button']", text: "Show all (2)"
   end
 
   test "does not show a show-all button for 5 or fewer interactions" do

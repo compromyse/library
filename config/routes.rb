@@ -16,7 +16,7 @@ Rails.application.routes.draw do
   get "/auth/:provider/callback", to: "sessions#omniauth"
   get "/auth/failure",            to: "sessions#omniauth_failure"
 
-  resources :interactions, only: [ :new, :create, :show ]
+  resources :interactions, only: [ :new, :create, :show, :edit, :update ]
 
   namespace :admin do
     resources :users, only: [ :index, :new, :create ] do

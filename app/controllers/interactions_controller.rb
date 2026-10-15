@@ -19,12 +19,25 @@ class InteractionsController < ApplicationController
     end
   end
 
+  def edit
+    @interaction = Interaction.includes(:issues).find(params[:id])
+  end
+
+  def update
+    @interaction = Interaction.find(params[:id])
+    if @interaction.update(interaction_params)
+      redirect_to root_path, notice: "Interaction updated."
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def interaction_params
     params.require(:interaction).permit(
       :age, :gender, :estimated_time,
-      issues_attributes: [ :primary_need, :primary_need_other_detail, :interaction_description ]
+      issues_attributes: [ :id, :primary_need, :primary_need_other_detail, :interaction_description, :_destroy ]
     )
   end
 end

@@ -13,7 +13,19 @@ export default class extends Controller {
   }
 
   remove(event) {
-    if (this.rowTargets.length <= 1) return
-    event.target.closest("[data-issues-form-target='row']").remove()
+    const visibleRows = this.rowTargets.filter((row) => !row.classList.contains("hidden"))
+    if (visibleRows.length <= 1) return
+
+    const row = event.target.closest("[data-issues-form-target='row']")
+    const idField = row.querySelector("input[type=hidden][name$='[id]']")
+
+    if (idField) {
+      // persisted issue: keep it in the form, marked for destruction, instead of
+      // removing it outright -- an absent nested attribute is left unchanged, not destroyed
+      row.querySelector("[data-issue-destroy-field]").value = "1"
+      row.classList.add("hidden")
+    } else {
+      row.remove()
+    }
   }
 }

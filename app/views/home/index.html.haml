@@ -2,7 +2,8 @@
 .max-w-4xl.mx-auto.px-4
   %h1.text-3xl.font-bold.text-gray-900.mb-8= "Welcome, #{current_user.name}"
 
-  %section.mb-10{data: { controller: "expandable" }}
+  - hidden_count = [ @todays_interactions.size - 5, 0 ].max
+  %section.mb-10{data: { controller: "expandable", "expandable-count-value": hidden_count }}
     %h2.text-sm.font-semibold.text-gray-500.uppercase.tracking-widest.mb-3 Today's Interactions
     - if @todays_interactions.any?
       .overflow-x-auto{data: { controller: "row-details" }}
@@ -23,7 +24,7 @@
                 %td.px-3.py-2.text-lg.text-gray-900= interaction.created_at.strftime("%-l:%M %p")
                 %td.px-3.py-2.text-lg.text-gray-900= interaction.age.humanize
                 %td.px-3.py-2.text-lg.text-gray-900= interaction.gender.humanize
-                %td.px-3.py-2.text-lg.text-gray-900= interaction.issues.map { |i| i.primary_need.humanize }.join(", ")
+                %td.px-3.py-2.text-lg.text-gray-900.max-w-48.truncate= interaction.issues.map { |i| i.primary_need.humanize }.join(", ")
                 %td.px-3.py-2.text-lg.text-gray-900= interaction.estimated_time.humanize
                 %td.px-3.py-2.text-gray-400
                   %span.inline-block.transition-transform{data: { "row-details-chevron": true }} ▸
@@ -31,10 +32,10 @@
                 %td.px-3.py-4.bg-gray-50{colspan: 6}
                   %turbo-frame{id: dom_id(interaction, :details), data: { src: interaction_path(interaction) }}
                     %p.text-lg.text-gray-500 Loading…
-      - if @todays_interactions.size > 5
-        %button{type: "button", data: { "expandable-target": "button", action: "click->expandable#show" },
+      - if hidden_count > 0
+        %button{type: "button", data: { "expandable-target": "button", action: "click->expandable#toggle" },
             class: "mt-3 px-4 py-2 text-lg font-medium text-gray-900 border-2 border-gray-900 hover:bg-gray-100 cursor-pointer transition-colors"}
-          = "Show all (#{@todays_interactions.size})"
+          = "Show all (#{hidden_count})"
     - else
       %p.text-xl.text-gray-500 No interactions logged today.
 

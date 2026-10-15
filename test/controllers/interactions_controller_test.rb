@@ -90,4 +90,92 @@ class InteractionsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :unprocessable_entity
   end
+
+  test "GET /interactions/:id/edit requires authentication" do
+    get edit_interaction_path(interaction_with_issue)
+    assert_redirected_to login_path
+  end
+
+  test "GET /interactions/:id/edit renders the form pre-filled with the existing issue" do
+    interaction = interaction_with_issue(primary_need: :food)
+    post login_path, params: { email: users(:caseworker).email, password: "password" }
+
+    get edit_interaction_path(interaction)
+
+    assert_response :success
+    assert_select "textarea", text: "Needed help"
+  end
+
+  test "PATCH /interactions/:id updates the interaction's own fields" do
+    interaction = interaction_with_issue
+    post login_path, params: { email: users(:caseworker).email, password: "password" }
+
+    patch interaction_path(interaction), params: {
+      interaction: {
+        age: "thirties", gender: "male", estimated_time: "twenty_minutes",
+        issues_attributes: {
+          "0" => { id: interaction.issues.first.id, primary_need: "food", interaction_description: "Needed help" }
+        }
+      }
+    }
+
+    assert_redirected_to root_path
+    interaction.reload
+    assert interaction.thirties?
+    assert interaction.male?
+    assert interaction.twenty_minutes?
+  end
+
+  test "PATCH /interactions/:id can edit an existing issue in place" do
+    interaction = interaction_with_issue(primary_need: :housing)
+    issue = interaction.issues.first
+    post login_path, params: { email: users(:caseworker).email, password: "password" }
+
+    patch interaction_path(interaction), params: {
+      interaction: {
+        age: "twenties", gender: "female", estimated_time: "ten_minutes",
+        issues_attributes: {
+          "0" => { id: issue.id, primary_need: "medical", interaction_description: "Needed a checkup" }
+        }
+      }
+    }
+
+    assert_redirected_to root_path
+    assert_equal 1, interaction.issues.count
+    issue.reload
+    assert issue.medical?
+    assert_equal "Needed a checkup", issue.interaction_description
+  end
+
+  test "PATCH /interactions/:id destroys an issue flagged with _destroy, leaving the other intact" do
+    interaction = interaction_with_issue(primary_need: :housing)
+    interaction.issues.create!(primary_need: :food, interaction_description: "Second issue")
+    keep, drop = interaction.issues.order(:id)
+    post login_path, params: { email: users(:caseworker).email, password: "password" }
+
+    assert_difference "Issue.count", -1 do
+      patch interaction_path(interaction), params: {
+        interaction: {
+          age: "twenties", gender: "female", estimated_time: "ten_minutes",
+          issues_attributes: {
+            "0" => { id: keep.id, primary_need: "housing", interaction_description: "Needed help" },
+            "1" => { id: drop.id, primary_need: "food", interaction_description: "Second issue", _destroy: "1" }
+          }
+        }
+      }
+    end
+
+    assert_redirected_to root_path
+    assert Issue.exists?(keep.id)
+    assert_not Issue.exists?(drop.id)
+  end
+
+  test "PATCH /interactions/:id with invalid params re-renders the edit form" do
+    interaction = interaction_with_issue
+    post login_path, params: { email: users(:caseworker).email, password: "password" }
+
+    patch interaction_path(interaction), params: { interaction: { age: "" } }
+
+    assert_response :unprocessable_entity
+  end
 end

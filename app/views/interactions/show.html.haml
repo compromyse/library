@@ -6,3 +6,5 @@
         - if issue.other?
           %p.text-lg.text-gray-700= issue.primary_need_other_detail
         %p.text-lg.text-gray-700= issue.interaction_description
+    = link_to "Edit", edit_interaction_path(@interaction),
+        class: "inline-block text-lg font-medium text-gray-900 underline", data: { turbo_frame: "_top" }
